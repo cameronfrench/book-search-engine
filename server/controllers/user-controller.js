@@ -5,7 +5,7 @@ const { signToken } = require('../utils/auth');
 
 module.exports = {
   // get a single user by either their id or their username
-  async getSingleUser({ user = null, params }, res) {
+  async findUser({ user = null, params }, res) {
     const foundUser = await User.findOne({
       $or: [{ _id: user ? user._id : params.id }, { username: params.username }],
     });
@@ -17,7 +17,7 @@ module.exports = {
     res.json(foundUser);
   },
   // create a user, sign a token, and send it back (to client/src/components/SignUpForm.js)
-  async createUser({ body }, res) {
+  async addUser({ body }, res) {
     const user = await User.create(body);
 
     if (!user) {
@@ -59,7 +59,7 @@ module.exports = {
     }
   },
   // remove a book from `savedBooks`
-  async deleteBook({ user, params }, res) {
+  async removeBook({ user, params }, res) {
     const updatedUser = await User.findOneAndUpdate(
       { _id: user._id },
       { $pull: { savedBooks: { bookId: params.bookId } } },
